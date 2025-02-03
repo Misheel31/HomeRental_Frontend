@@ -1,19 +1,27 @@
 import axios from "axios";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { FaSlidersH } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../Context/AuthContext";
-import PriceFilter from "./PriceFilter";
+// import PriceFilter from "./PriceFilter";
 
 const Navbar = ({ searchTerm, onSearchChange }) => {
-  const { login, logout, isAuthenticated, getUsername } = useAuth();
+  const { isLoggedIn, username, login, logout } = useAuth();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState("");
-  const [showLoginModal, setShowLoginModal] = useState(false);
-  const [showPriceFilter, setShowPriceFilter] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+  // const [showPriceFilter, setShowPriceFilter] = useState(false);
   const navigate = useNavigate();
+
+  useEffect(() => {
+    console.log(
+      "Navbar Rendered - isLoggedIn:",
+      isLoggedIn,
+      "Username:",
+      username
+    );
+  }, [isLoggedIn, username]);
 
   const handleLogin = async (e) => {
     e.preventDefault();
@@ -23,16 +31,11 @@ const Navbar = ({ searchTerm, onSearchChange }) => {
     try {
       const response = await axios.post(
         "http://localhost:3000/api/auth/login",
-        {
-          email,
-          password,
-        }
+        { email, password }
       );
 
       if (response.status === 200 && response.data.token) {
-        login(response.data.token);
-
-        setShowLoginModal(false);
+        login(response.data.token, response.data.user.username);
         setEmail("");
         setPassword("");
         navigate("/");
@@ -45,11 +48,6 @@ const Navbar = ({ searchTerm, onSearchChange }) => {
     } finally {
       setIsLoading(false);
     }
-  };
-
-  const handleLogout = () => {
-    logout();
-    navigate("/splash");
   };
 
   return (
@@ -78,21 +76,20 @@ const Navbar = ({ searchTerm, onSearchChange }) => {
                 value={searchTerm}
                 onChange={onSearchChange}
               />
-
               <button
-                onClick={() => setShowPriceFilter(true)}
+                onClick={() => navigate("/bookings")} 
                 className="bg-gray-700 hover:bg-gray-600 text-white px-4 py-2 rounded flex items-center space-x-2"
               >
                 <FaSlidersH size={16} />
-                <span>Filters</span>
+                <span>Bookings</span>
               </button>
             </div>
 
-            {isAuthenticated() ? (
+            {isLoggedIn ? (
               <div className="flex items-center space-x-4">
-                <span className="text-white">Welcome, {getUsername()}</span>
+                <span className="text-white">Welcome, {username}</span>
                 <button
-                  onClick={handleLogout}
+                  onClick={logout}
                   className="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600"
                 >
                   Logout
@@ -110,15 +107,15 @@ const Navbar = ({ searchTerm, onSearchChange }) => {
         </div>
       </nav>
 
-      {/* PriceFilter Modal */}
+      {/* PriceFilter Modal
       <PriceFilter
         isOpen={showPriceFilter}
-        onClose={() => setShowPriceFilter(false)} 
+        onClose={() => setShowPriceFilter(false)}
         onApply={(filters) => {
           console.log("Applied Filters:", filters);
           setShowPriceFilter(false);
         }}
-      />
+      /> */}
     </>
   );
 };

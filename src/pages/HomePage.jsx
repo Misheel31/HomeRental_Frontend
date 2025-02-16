@@ -59,21 +59,57 @@ const HomePage = () => {
   };
 
   const toggleWishlist = async (property) => {
+    const username = localStorage.getItem("username");
+    if (!username) {
+      alert("Please log in to add to wishlist.");
+      return;
+    }
+
     try {
       const isAlreadyInWishlist = wishlist.some(
-        (item) => item._id === property._id
+        (item) => item.propertyId === property._id
       );
 
       if (isAlreadyInWishlist) {
-        setWishlist(wishlist.filter((item) => item._id !== property._id));
+        const wishlistItem = wishlist.find(
+          (item) => item.propertyId === property._id
+        );
+
+        setWishlist(
+          wishlist.filter((item) => item.propertyId !== property._id)
+        );
+
+        await axios.delete(
+          `http://localhost:3000/api/wishlist/${wishlistItem._id}`
+        );
+
+        alert("Removed from wishlist!");
       } else {
-        setWishlist([...wishlist, property]);
-        await axios.post("http://localhost:3000/api/wishlist", {
+        const newWishlistItem = {
+          username,
           propertyId: property._id,
-        });
+          image: property.image, 
+          pricePerNight: property.pricePerNight, 
+          location: property.location, 
+        };
+
+        console.log("Sending payload to wishlist:", newWishlistItem);
+
+        const response = await axios.post(
+          "http://localhost:3000/api/wishlist/create",
+          newWishlistItem
+        );
+
+        setWishlist([...wishlist, response.data]);
+        console.log("Wishlist Response:", response.data);
+        alert("Added to wishlist!");
       }
     } catch (error) {
-      console.error("Failed to update wishlist", error);
+      console.error(
+        "Failed to create wishlist",
+        error.response?.data || error.message
+      );
+      alert("Error creating wishlist. Please try again.");
     }
   };
 

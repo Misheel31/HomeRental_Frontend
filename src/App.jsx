@@ -1,24 +1,24 @@
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import "./App.css";
-import About from "./components/About";
+import About from "./private/components/About";
 // import { AuthProvider } from "./Context/AuthContext";
-import AdminManageProperty from "./Admin/AdminManageProperty";
-import AdminPage from "./Admin/AdminPage";
-import BookingList from "./Admin/BookingList";
-import CreateProperty from "./Admin/CreateProperty";
-import AdminPropertyDetails from "./Admin/PropertyDetail";
-import UserList from "./Admin/UserList";
-import LoginPage from "./Auth/LoginPage";
-import RegisterPage from "./Auth/RegisterPage";
-import ForgotPassword from "./Auth/UserForgotPassword";
-import ResetPassword from "./Auth/UserResetPassword";
-import { BookingPage } from "./pages/BookingPage";
-import GetBooking from "./pages/getBooking";
-import HomePage from "./pages/HomePage";
-import ProfilePage from "./pages/ProfilePage";
-import PropertyDetails from "./pages/PropertyDetail";
-import SplashPage from "./pages/SplashPage";
-import WishlistPage from "./pages/WishlistPage";
+import AdminManageProperty from "./private/Admin/AdminManageProperty";
+import AdminPage from "./private/Admin/AdminPage";
+import BookingList from "./private/Admin/BookingList";
+import CreateProperty from "./private/Admin/CreateProperty";
+import AdminPropertyDetails from "./private/Admin/PropertyDetail";
+import UserList from "./private/Admin/UserList";
+import ForgotPassword from "./private/Auth/UserForgotPassword";
+import ResetPassword from "./private/Auth/UserResetPassword";
+import { BookingPage } from "./private/pages/BookingPage";
+import GetBooking from "./private/pages/getBooking";
+import HomePage from "./private/pages/Dashboard";
+import ProfilePage from "./private/pages/ProfilePage";
+import PropertyDetails from "./private/pages/PropertyDetail";
+import WishlistPage from "./private/pages/WishlistPage";
+import LoginPage from "./public/LoginPage";
+import RegisterPage from "./public/RegisterPage";
+import SplashPage from "./public/SplashPage";
 
 function App() {
   return (

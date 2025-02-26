@@ -1,17 +1,19 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { useAuth } from "../Context/AuthContext";
 
 const GetBooking = () => {
   const { username } = useAuth();
   const [bookings, setBookings] = useState([]);
   const [error, setError] = useState("");
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchBookings = async () => {
       try {
         const response = await axios.get(
-          `http://localhost:3000/api/booking/get?username=${username}`
+          `http://localhost:3000/api/booking/${username}`
         );
         setBookings(response.data.bookings);
       } catch (error) {
@@ -24,6 +26,10 @@ const GetBooking = () => {
       fetchBookings();
     }
   }, [username]);
+
+  const handleCheckout = (bookingId) => {
+    navigate(`/payment/${bookingId}`);
+  };
 
   const cancelBooking = async (bookingId) => {
     try {
@@ -39,10 +45,12 @@ const GetBooking = () => {
     } catch (error) {
       setError("Error canceling booking");
     }
+  };
 
-    // const handleCheckout = (bookingId) => {
-    //   console.log(`proceed to checkout for booking Id: ${bookingId}`);
-    // };
+  const removePaidBooking = (bookingId) => {
+    setBookings((prevBookings) =>
+      prevBookings.filter((booking) => booking._id !== bookingId)
+    );
   };
 
   return (
@@ -77,13 +85,21 @@ const GetBooking = () => {
                 >
                   Cancel Booking
                 </button>
-
-                <button
-                  onClick={() => cancelBooking(booking._id)}
-                  className="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-100 transition-colors duration-200"
-                >
-                  Checkout
-                </button>
+                {booking.paymentStatus === "Paid" ? (
+                  <button
+                    onClick={() => removePaidBooking(booking._id)}
+                    className="bg-green-500 text-white px-4 py-2 rounded-md"
+                  >
+                    Booking Paid
+                  </button>
+                ) : (
+                  <button
+                    onClick={() => handleCheckout(booking._id)}
+                    className="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-100 transition-colors duration-200"
+                  >
+                    Checkout
+                  </button>
+                )}
               </div>
             </li>
           ))}

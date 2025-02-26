@@ -11,14 +11,15 @@ import UserList from "./private/Admin/UserList";
 import ForgotPassword from "./private/Auth/UserForgotPassword";
 import ResetPassword from "./private/Auth/UserResetPassword";
 import { BookingPage } from "./private/pages/BookingPage";
-import GetBooking from "./private/pages/getBooking";
 import HomePage from "./private/pages/Dashboard";
+import GetBooking from "./private/pages/getBooking";
+import PaymentPage from "./private/pages/PaymentPage";
 import ProfilePage from "./private/pages/ProfilePage";
 import PropertyDetails from "./private/pages/PropertyDetail";
 import WishlistPage from "./private/pages/WishlistPage";
+import SplashPage from "./public/HomePage";
 import LoginPage from "./public/LoginPage";
 import RegisterPage from "./public/RegisterPage";
-import SplashPage from "./public/SplashPage";
 
 function App() {
   return (
@@ -35,6 +36,7 @@ function App() {
         <Route path="/admin" element={<AdminPage />} />
         <Route path="/bookings" element={<GetBooking />} />
         <Route path="/bookingList" element={<BookingList />} />
+        <Route path="/payment/:bookingId" element={<PaymentPage />} />
         <Route
           path="/AdminManageProperty/:id"
           element={<AdminManageProperty />}
